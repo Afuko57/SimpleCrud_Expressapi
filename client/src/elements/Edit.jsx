@@ -7,7 +7,7 @@ function Edit() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`/get_student/${id}`)
+      .get(`http://localhost:5000/v1/get_student/${id}`)
       .then((res) => {
         setData(res.data);
       })
@@ -20,7 +20,7 @@ function Edit() {
     e.preventDefault();
 
     axios
-      .post(`/edit_user/${id}`, data[0])
+      .post(`http://localhost:5000/v1/edit_user/${id}`, data[0])
       .then((res) => {
         navigate("/");
         console.log(res);

@@ -7,10 +7,12 @@ const router = express.Router();
 
 /**
  * @swagger
- * /add_user:
+ * /v1/add_user:
  *   post:
  *     summary: Add a new student
  *     description: Add a new student to the database
+ *     tags:
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -30,7 +32,7 @@ const router = express.Router();
  *       '200':
  *         description: A successful response
  */
-router.post("/add_user", (req, res) => {
+router.post("/v1/add_user", (req, res) => {
   const sql =
     "INSERT INTO student_details (`name`,`email`,`age`,`gender`) VALUES (?, ?, ?, ?)";
   const values = [req.body.name, req.body.email, req.body.age, req.body.gender];
@@ -42,10 +44,12 @@ router.post("/add_user", (req, res) => {
 
 /**
  * @swagger
- * /edit_user/{id}:
+ * /v1/edit_user/{id}:
  *   post:
  *     summary: Edit a student by ID
  *     description: Edit a student in the database by ID
+ *     tags:
+ *       - Users
  *     parameters:
  *       - in: path
  *         name: id
@@ -72,10 +76,10 @@ router.post("/add_user", (req, res) => {
  *       '200':
  *         description: A successful response
  */
-router.post("/edit_user/:id", (req, res) => {
-  const id = req.params.id;
+router.post("/v1/edit_user/:student_id", (req, res) => {
+  const id = req.params.student_id;
   const sql =
-    "UPDATE student_details SET `name`=?, `email`=?, `age`=?, `gender`=? WHERE id=?";
+    "UPDATE student_details SET `name`=?, `email`=?, `age`=?, `gender`=? WHERE student_id=?";
   const values = [
     req.body.name,
     req.body.email,
@@ -84,17 +88,22 @@ router.post("/edit_user/:id", (req, res) => {
     id,
   ];
   db.query(sql, values, (err, result) => {
-    if (err) return handleErrorResponse(res, err);
+    if (err){
+      console.error(err); 
+      return handleErrorResponse(res, err);
+    }
     return res.json({ success: "Student updated successfully" });
   });
 });
 
 /**
  * @swagger
- * /delete/{id}:
+ * /v1/delete/{id}:
  *   delete:
  *     summary: Delete a student by ID
  *     description: Delete a student from the database by ID
+ *     tags:
+ *       - Users
  *     parameters:
  *       - in: path
  *         name: id
@@ -106,9 +115,9 @@ router.post("/edit_user/:id", (req, res) => {
  *       '200':
  *         description: A successful response
  */
-router.delete("/delete/:id", (req, res) => {
-  const id = req.params.id;
-  const sql = "DELETE FROM student_details WHERE id=?";
+router.delete("/delete/:student_id", (req, res) => {
+  const id = req.params.student_id;
+  const sql = "DELETE FROM student_details WHERE student_id=?";
   const values = [id];
   db.query(sql, values, (err, result) => {
     if (err) return handleErrorResponse(res, err);

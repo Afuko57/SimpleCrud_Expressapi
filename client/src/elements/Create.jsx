@@ -15,7 +15,7 @@ function Create() {
     function handleSubmit(e){
         e.preventDefault()
 
-        axios.post('/add_user', values)
+        axios.post('http://localhost:5000/v1/add_user', values)
         .then((res)=>{
             
             navigate('/')
@@ -24,7 +24,7 @@ function Create() {
         .catch((err)=>console.log(err))
     }
   return (
-    <div className='container vh-100 vw-100 bg-primary'>
+    <div className='container vh-100 vw-100'>
         <div className='row'>
             <h3>Add Student</h3>
             <div className='d-flex justify-content-end'>
