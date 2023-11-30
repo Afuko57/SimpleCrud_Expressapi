@@ -44,7 +44,7 @@ router.post("/v1/add_user", (req, res) => {
 
 /**
  * @swagger
- * /v1/edit_user/{id}:
+ * /v1/edit_user/{student_id}:
  *   post:
  *     summary: Edit a student by ID
  *     description: Edit a student in the database by ID
@@ -98,7 +98,7 @@ router.post("/v1/edit_user/:student_id", (req, res) => {
 
 /**
  * @swagger
- * /v1/delete/{id}:
+ * /v1/delete/{student_id}:
  *   delete:
  *     summary: Delete a student by ID
  *     description: Delete a student from the database by ID
@@ -106,7 +106,7 @@ router.post("/v1/edit_user/:student_id", (req, res) => {
  *       - Users
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: student_id
  *         schema:
  *           type: integer
  *         required: true
@@ -115,7 +115,7 @@ router.post("/v1/edit_user/:student_id", (req, res) => {
  *       '200':
  *         description: A successful response
  */
-router.delete("/delete/:student_id", (req, res) => {
+router.delete('/v1/delete/:student_id', (req, res) => {
   const id = req.params.student_id;
   const sql = "DELETE FROM student_details WHERE student_id=?";
   const values = [id];

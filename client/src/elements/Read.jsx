@@ -3,30 +3,33 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 function Read() {
-  const [student, setStudent] = useState({});
   const { student_id } = useParams();
+  const [student, setStudent] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/v1/get_student/${student_id}`)
-      .then((res) => {
-        const responseData = res.data;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/v1/get_student/${student_id}`, {
+          headers: {
+            'accept': '*/*',
+          },
+        });
+        setStudent(response.data[0]); // เนื่องจากข้อมูลมีรูปแบบ Array ของ Object
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+        setLoading(false);
+      }
+    };
 
-        // ตรวจสอบว่า responseData ไม่เป็น null และมี Property อย่างน้อย 1 อันใน Object.keys(responseData)
-        if (responseData && Object.keys(responseData).length > 0) {
-          // ใช้ข้อมูลที่ได้จาก API
-          setStudent(responseData);
-        } else {
-          console.error("API response is not as expected:", responseData);
-          // แสดงข้อความหรือทำอย่างอื่นตามที่คุณต้องการ
-        }
-      })
-      .catch((err) => console.error(err));
+    fetchData();
   }, [student_id]);
+
 
   return (
     <div className="container-fluid vw-100 vh-100">
-      <h1>User {student_id}</h1>
+      <h1>User {student.name}</h1>
       <Link to="/" className="btn btn-success">
         Back
       </Link>
@@ -35,23 +38,23 @@ function Read() {
         <ul className="list-group" key={student.student_id}>
           <li className="list-group-item">
             <b>student_id: </b>
-            {student["student_id"]}
+            {student.student_id}
           </li>
           <li className="list-group-item">
             <b>Name: </b>
-            {student["name"]}
+            {student.name}
           </li>
           <li className="list-group-item">
             <b>Email: </b>
-            {student["email"]}
+            {student.email}
           </li>
           <li className="list-group-item">
             <b>Age: </b>
-            {student["age"]}
+            {student.age}
           </li>
           <li className="list-group-item">
             <b>Gender: </b>
-            {student["gender"]}
+            {student.gender}
           </li>
         </ul>
       ) : (

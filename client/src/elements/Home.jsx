@@ -1,10 +1,11 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Home() {
   const [data, setData] = useState([]);
   const [deleted, setDeleted] = useState(true);
+
   useEffect(() => {
     if (deleted) {
       setDeleted(false);
@@ -17,13 +18,18 @@ function Home() {
     }
   }, [deleted]);
 
-  function handleDelete(id) {
-    axios.delete(`http://localhost:5000/v1/delete/${id}`)
-       .then((res) => {
-          setDeleted(true);
-       })
-       .catch((err) => console.log(err));
- }
+  function handleDelete(student_id) {
+    axios
+      .delete(`http://localhost:5000/v1/delete/${student_id}`)
+      .then((res) => {
+        console.log("Student deleted successfully:", res.data);
+        setDeleted(true);
+      })
+      .catch((err) => {
+        console.error("Error deleting student:", err);
+      });
+  }
+
   return (
     <div className="container-fluid vh-100 vw-100">
       <h3>Students</h3>
@@ -32,7 +38,7 @@ function Home() {
           Add Student
         </Link>
       </div>
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
