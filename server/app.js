@@ -25,7 +25,7 @@ const options = {
       },
     ],
   },
-  apis: ["./routes/students.js","./routes/users.js"], // Replace with the path to your route files
+  apis: ["./routes/students.js","./routes/users.js","./routes/login.js"], // Replace with the path to your route files
 };
 
 // Initialize Swagger-jsdoc
@@ -36,9 +36,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Routes
 const studentsRoute = require("./routes/students");
 const usersRoute = require("./routes/users");
+const loginRoute = require("./routes/login");
+
 
 app.use("/", studentsRoute);
 app.use("/", usersRoute);
+app.use("/", loginRoute);
 
 app.listen(port, () => {
   console.log(`listening on port ${port} `);
