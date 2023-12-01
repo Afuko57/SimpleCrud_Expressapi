@@ -10,11 +10,7 @@ function Read() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/v1/get_student/${student_id}`, {
-          headers: {
-            'accept': '*/*',
-          },
-        });
+        const response = await axios.get(`http://localhost:5000/v1/get_student/${student_id}`);
         setStudent(response.data[0]); // เนื่องจากข้อมูลมีรูปแบบ Array ของ Object
         setLoading(false);
       } catch (error) {
@@ -26,39 +22,33 @@ function Read() {
     fetchData();
   }, [student_id]);
 
-
   return (
-    <div className="container-fluid vw-100 vh-100">
-      <h1>User {student.name}</h1>
-      <Link to="/" className="btn btn-success">
+    <div className="container mt-5">
+      <h1 className="mb-4">Student Information</h1>
+      <Link to="/" className="btn btn-success mb-4">
         Back
       </Link>
 
       {student && Object.keys(student).length > 0 ? (
-        <ul className="list-group" key={student.student_id}>
+        <ul className="list-group">
           <li className="list-group-item">
-            <b>student_id: </b>
-            {student.student_id}
+            <strong>Student ID:</strong> {student.student_id}
           </li>
           <li className="list-group-item">
-            <b>Name: </b>
-            {student.name}
+            <strong>Name:</strong> {student.name}
           </li>
           <li className="list-group-item">
-            <b>Email: </b>
-            {student.email}
+            <strong>Email:</strong> {student.email}
           </li>
           <li className="list-group-item">
-            <b>Age: </b>
-            {student.age}
+            <strong>Age:</strong> {student.age}
           </li>
           <li className="list-group-item">
-            <b>Gender: </b>
-            {student.gender}
+            <strong>Gender:</strong> {student.gender}
           </li>
         </ul>
       ) : (
-        <p>No data available</p>
+        <p className="text-center">{loading ? 'Loading...' : 'Student not found'}</p>
       )}
     </div>
   );

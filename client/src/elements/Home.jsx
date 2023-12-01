@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert";
+import { useAuth } from '../AuthContext'; 
 
 function Home() {
+  const { state } = useAuth();
   const [data, setData] = useState([]);
   const [deleted, setDeleted] = useState(true);
 
@@ -19,24 +22,36 @@ function Home() {
   }, [deleted]);
 
   function handleDelete(student_id) {
-    axios
-      .delete(`http://localhost:5000/v1/delete/${student_id}`)
-      .then((res) => {
-        console.log("Student deleted successfully:", res.data);
-        setDeleted(true);
-      })
-      .catch((err) => {
-        console.error("Error deleting student:", err);
-      });
+    Swal({
+      title: "Delete?",
+      text: "Are you sure you want to delete this student?",
+      icon: "warning",
+      buttons: ["Cancel", "Delete"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`http://localhost:5000/v1/delete/${student_id}`)
+          .then((res) => {
+            console.log("Student deleted successfully:", res.data);
+            setDeleted(true);
+          })
+          .catch((err) => {
+            console.error("Error deleting student:", err);
+          });
+      }
+    });
   }
 
   return (
-    <div className="container-fluid vh-100 vw-100">
+    <div className="container mt-5">
       <h3>Students</h3>
-      <div className="d-flex justify-content-end">
-        <Link className="btn btn-success" to="/create">
-          Add Student
-        </Link>
+      <div className="d-flex justify-content-end mb-3">
+      {state.role === 'admin' && ( 
+          <Link className="btn btn-success" to="/create">
+            Add Student
+          </Link>
+        )}
       </div>
       <table className="table">
         <thead>
@@ -59,20 +74,20 @@ function Home() {
               <td>{student.gender}</td>
               <td>
                 <Link
-                  className="btn mx-2 btn-success"
+                  className="btn btn-success"
                   to={`/read/${student.student_id}`}
                 >
                   Read
                 </Link>
                 <Link
-                  className="btn mx-2 btn-success"
+                  className="btn btn-warning mx-2"
                   to={`/edit/${student.student_id}`}
                 >
                   Edit
                 </Link>
                 <button
                   onClick={() => handleDelete(student.student_id)}
-                  className="btn mx-2 btn-danger"
+                  className="btn btn-danger mx-2"
                 >
                   Delete
                 </button>
